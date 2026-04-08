@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import { CreateTaskSchema, UpdateTaskSchema } from '@/validators';
 import * as taskServices from './services';
 
-export async function createTaskAction(formData: FormData) {
+export async function createTaskAction(prevState: any, formData: FormData) {
   const rawData = {
     title: formData.get('title') as string,
     description: formData.get('description') as string || undefined,

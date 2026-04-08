@@ -12,7 +12,6 @@ interface ProjectEditClientProps {
 
 export function ProjectEditClient({ project }: ProjectEditClientProps) {
   const params = useParams();
-  const boundUpdateAction = updateProjectAction.bind(null, params.id as string);
 
   const handleDelete = async () => {
     if (confirm('确定要删除这个项目吗？')) {
@@ -35,8 +34,8 @@ export function ProjectEditClient({ project }: ProjectEditClientProps) {
       </div>
 
       <ProjectForm
-        initialData={project}
-        action={boundUpdateAction}
+        initialData={{ ...project, id: params.id }}
+        action={updateProjectAction}
         submitLabel="更新项目"
       />
     </div>

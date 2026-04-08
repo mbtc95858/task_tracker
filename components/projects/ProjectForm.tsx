@@ -32,6 +32,7 @@ export function ProjectForm({ initialData, action, submitLabel }: ProjectFormPro
       </CardHeader>
       <CardContent>
         <form action={formAction} className="space-y-4">
+          {data.id && <input type="hidden" name="id" value={data.id} />}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               标题 *

@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import { CreateProjectSchema, UpdateProjectSchema } from '@/validators';
 import { createProject, updateProject, deleteProject } from './services';
 
-export async function createProjectAction(prevState: { error: string | null }, formData: FormData) {
+export async function createProjectAction(prevState: any, formData: FormData) {
   try {
     const data = {
       title: formData.get('title') as string,
@@ -32,7 +32,13 @@ export async function createProjectAction(prevState: { error: string | null }, f
   }
 }
 
-export async function updateProjectAction(id: string, prevState: { error: string | null }, formData: FormData) {
+export async function updateProjectAction(prevState: any, formData: FormData) {
+  const id = formData.get('id') as string;
+  
+  if (!id) {
+    return { error: '缺少项目ID' };
+  }
+
   try {
     const data = {
       title: formData.get('title') as string | undefined,

@@ -110,7 +110,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
               <div>
                 <span className="text-sm font-medium text-gray-500 dark:text-gray-400">阻力原因</span>
                 <div className="flex flex-wrap gap-2 mt-1">
-                  {resistanceReasons.map((reason) => (
+                  {resistanceReasons.map((reason: string) => (
                     <span
                       key={reason}
                       className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded"
@@ -159,7 +159,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
               <p className="text-gray-500 dark:text-gray-400">暂无推进记录</p>
             ) : (
               <div className="space-y-3">
-                {task.progressLogs.map((log) => (
+                {task.progressLogs.map((log: any) => (
                   <div key={log.id} className="flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                     <div className="flex-1">
                       <p className="font-medium text-gray-900 dark:text-white">

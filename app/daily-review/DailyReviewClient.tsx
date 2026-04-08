@@ -172,7 +172,7 @@ export default function DailyReviewClient({ todayReview, reviewHistory, tasks }:
               <div key={review.id} className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                 <div className="flex items-center justify-between">
                   <span className="font-medium text-gray-900 dark:text-white">
-                    {new Date(review.date).toLocaleDateString()}
+                    {new Date(review.date).toLocaleDateString('zh-CN', { timeZone: 'Asia/Shanghai' })}
                   </span>
                   {review.didStart && (
                     <span className="text-sm text-green-600 dark:text-green-400">✓ 开始了</span>

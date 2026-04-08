@@ -72,10 +72,10 @@ export default async function DashboardPage() {
               </p>
               {dashboard.avoidedTasksList.map((task) => (
                 <Link key={task.id} href={`/tasks/${task.id}`}>
-                  <div className="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-colors">
+                  <div className="p-4 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900/30 transition-colors">
                     <h4 className="font-semibold text-gray-900 dark:text-white">{task.title}</h4>
                     {task.contactStep && (
-                      <p className="text-sm text-orange-800 dark:text-orange-200 mt-1">
+                      <p className="text-sm text-indigo-700 dark:text-indigo-200 mt-1">
                         接触动作：{task.contactStep}
                       </p>
                     )}
@@ -149,8 +149,8 @@ export default async function DashboardPage() {
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
-            <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">{dashboard.highResistanceTasks}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">高阻力</p>
+            <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{dashboard.highResistanceTasks}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">挑战性</p>
           </CardContent>
         </Card>
         <Card>

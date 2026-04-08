@@ -45,8 +45,8 @@ export default async function TasksPage() {
                           优先级: {PRIORITY_LABELS[task.priority as keyof typeof PRIORITY_LABELS]}
                         </span>
                         {isHighResistance && (
-                          <span className="text-sm text-orange-600 dark:text-orange-400 font-medium">
-                            ⚠️ 高阻力
+                          <span className="text-sm text-indigo-600 dark:text-indigo-400 font-medium">
+                            💪 挑战性
                           </span>
                         )}
                       </div>

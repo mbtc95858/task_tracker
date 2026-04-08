@@ -62,8 +62,8 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
               </div>
             )}
             {isHighResistance && (
-              <div className="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
-                <p className="text-orange-800 dark:text-orange-200 font-medium">⚠️ 这是一个高阻力任务</p>
+              <div className="p-4 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg">
+                <p className="text-indigo-700 dark:text-indigo-200 font-medium">💪 这是一个挑战性任务</p>
               </div>
             )}
           </CardContent>

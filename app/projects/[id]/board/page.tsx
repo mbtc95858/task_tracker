@@ -62,8 +62,8 @@ export default async function ProjectBoardPage({ params }: ProjectBoardPageProps
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-orange-600 dark:text-orange-400">高阻力节点</span>
-              <span className="font-medium text-orange-600">
+              <span className="text-indigo-600 dark:text-indigo-400">挑战性节点</span>
+              <span className="font-medium text-indigo-600">
                 {project.highResistanceNodes.length}
               </span>
             </div>

@@ -32,7 +32,7 @@ export function TaskTreeNodeCard({ node, level, onToggleExpand }: TaskTreeNodeCa
       case 'DONE':
         return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200';
       case 'AVOIDED':
-        return 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200';
+        return 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-200';
       case 'BLOCKED':
         return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200';
       case 'ACTIVE':
@@ -47,7 +47,7 @@ export function TaskTreeNodeCard({ node, level, onToggleExpand }: TaskTreeNodeCa
       <Card
         className={`
           border-l-4 transition-all
-          ${node.isHighResistance ? 'border-l-orange-400 bg-orange-50/50 dark:bg-orange-900/10' : 'border-l-gray-300 dark:border-l-gray-600'}
+          ${node.isHighResistance ? 'border-l-indigo-400 bg-indigo-50/30 dark:bg-indigo-900/10' : 'border-l-gray-300 dark:border-l-gray-600'}
         `}
       >
         <CardHeader className="pb-2">
@@ -80,9 +80,9 @@ export function TaskTreeNodeCard({ node, level, onToggleExpand }: TaskTreeNodeCa
 
         <CardContent className="space-y-3">
           {node.isHighResistance && (
-            <div className="p-2 bg-orange-50 dark:bg-orange-900/20 rounded text-sm">
-              <p className="text-orange-800 dark:text-orange-200 font-medium">⚠️ 高阻力节点</p>
-              <p className="text-xs text-orange-700 dark:text-orange-300 mt-1">
+            <div className="p-2 bg-indigo-50 dark:bg-indigo-900/20 rounded text-sm">
+              <p className="text-indigo-700 dark:text-indigo-200 font-medium">💪 挑战性节点</p>
+              <p className="text-xs text-indigo-600 dark:text-indigo-300 mt-1">
                 {node.fearLevel && `恐惧: ${node.fearLevel}/10`}
                 {node.resistanceLevel && ` · 阻力: ${node.resistanceLevel}/10`}
                 {node.startDifficulty && ` · 启动难度: ${node.startDifficulty}/10`}

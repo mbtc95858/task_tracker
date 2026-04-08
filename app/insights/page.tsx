@@ -23,14 +23,14 @@ export default async function InsightsPage() {
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
-            <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">{insights.avoidedTasks}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">回避任务</p>
+            <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{insights.avoidedTasks}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">被回避的任务</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
-            <p className="text-2xl font-bold text-red-600 dark:text-red-400">{insights.highResistanceTasks}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">高阻力任务</p>
+            <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{insights.highResistanceTasks}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">挑战性任务</p>
           </CardContent>
         </Card>
         <Card>
@@ -87,7 +87,7 @@ export default async function InsightsPage() {
                     <div className="flex items-center gap-2">
                       <div className="w-32 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                         <div
-                          className="bg-orange-500 h-2 rounded-full"
+                          className="bg-indigo-500 h-2 rounded-full"
                           style={{
                             width: `${Math.min((count / Math.max(...insights.topResistanceReasons.map(([, c]) => c), 1)) * 100, 100)}%`,
                           }}

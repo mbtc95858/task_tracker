@@ -4,6 +4,7 @@ import {
   Priority,
   TaskProgressActionType,
   ResistanceReason,
+  PainComparison,
 } from '@/config/constants';
 import { stringifyResistanceReasons } from '@/config/businessRules';
 
@@ -88,13 +89,32 @@ async function main() {
         taskId: task3.id,
         actionType: TaskProgressActionType.TOUCHED,
         note: '今天先翻了翻书',
+        createdAt: new Date(Date.now() - 86400000),
       },
       {
         taskId: task3.id,
         actionType: TaskProgressActionType.STARTED_TINY_STEP,
         note: '读了 10 页',
+        createdAt: new Date(Date.now() - 86400000),
       },
     ],
+  });
+
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  yesterday.setHours(0, 0, 0, 0);
+
+  await prisma.dailyReview.create({
+    data: {
+      date: yesterday,
+      mostAvoidedTaskId: task1.id,
+      didStart: false,
+      blockingReason: '还是担心写不好',
+      effectiveStarter: '',
+      actualPainLevel: null,
+      painComparison: null,
+      note: '今天还是没开始写 proposal，明天再试试从接触动作开始',
+    },
   });
 
   await prisma.pointTransaction.createMany({
@@ -140,6 +160,13 @@ async function main() {
         sourceId: task3.id,
         delta: 5,
         reason: '完成最小动作',
+      },
+      {
+        sourceType: 'DAILY_REVIEW_COMPLETED',
+        sourceId: '',
+        delta: 3,
+        reason: '完成每日复盘',
+        createdAt: yesterday,
       },
     ],
   });

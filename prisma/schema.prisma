@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Task {
+  id                String   @id @default(cuid())
+  title             String
+  description       String?
+  category          String?
+  priority          String   @default("MEDIUM")
+  dueDate           DateTime?
+  estimatedMinutes  Int?
+  status            String   @default("INBOX")
+  fearLevel         Int?
+  resistanceLevel   Int?
+  clarityLevel      Int?
+  painLevel         Int?
+  startDifficulty   Int?
+  resistanceReasons String?
+  resistanceNote    String?
+  contactStep       String?
+  tinyStep          String?
+  normalStep        String?
+  progressLogs      TaskProgressLog[]
+  dailyReviews      DailyReview[] @relation("DailyReviewToTask")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([status])
+  @@index([priority])
+  @@index([createdAt])
+}
+
+model TaskProgressLog {
+  id        String   @id @default(cuid())
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  actionType String
+  note      String?
+  createdAt DateTime @default(now())
+
+  @@index([taskId])
+  @@index([actionType])
+  @@index([createdAt])
+}
+
+model DailyReview {
+  id                String   @id @default(cuid())
+  date              DateTime @unique
+  mostAvoidedTaskId String?
+  mostAvoidedTask   Task?    @relation("DailyReviewToTask", fields: [mostAvoidedTaskId], references: [id], onDelete: SetNull)
+  didStart          Boolean?
+  blockingReason    String?
+  effectiveStarter  String?
+  actualPainLevel   Int?
+  painComparison    String?
+  note              String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([date])
+}
+
+model PointTransaction {
+  id         String   @id @default(cuid())
+  sourceType String
+  sourceId   String?
+  delta      Int
+  reason     String
+  createdAt  DateTime @default(now())
+
+  @@index([sourceType])
+  @@index([createdAt])
+}

@@ -19,11 +19,6 @@ export default async function DashboardPage() {
             今天不要求完成，只要求接触
           </p>
         </div>
-        <div className="text-right">
-          <p className="text-sm text-gray-500 dark:text-gray-400">当前积分</p>
-          <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{points.totalPoints}</p>
-          <p className="text-sm text-green-600 dark:text-green-400">+{points.todayPoints} 今日</p>
-        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -134,7 +129,7 @@ export default async function DashboardPage() {
         )}
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-2xl font-bold text-gray-900 dark:text-white">{dashboard.totalTasks}</p>
@@ -157,6 +152,12 @@ export default async function DashboardPage() {
           <CardContent className="p-4 text-center">
             <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{dashboard.todayProgressCount}</p>
             <p className="text-sm text-gray-500 dark:text-gray-400">今日推进</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 text-center">
+            <p className="text-2xl font-bold text-gray-900 dark:text-white">{points.totalPoints}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">总积分</p>
           </CardContent>
         </Card>
       </div>

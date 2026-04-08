@@ -45,6 +45,9 @@ export async function getInsightsSummary() {
       t.resistanceLevel !== null && t.resistanceLevel >= 7 ||
       t.startDifficulty !== null && t.startDifficulty >= 7
     ).length,
+    completedTasks: allTasks.filter((t) => t.status === TaskStatus.DONE).length,
+    reactivatedCount: allProgressLogs.filter((log) => log.actionType === TaskProgressActionType.REACTIVATED).length,
+    touchCount: allProgressLogs.filter((log) => log.actionType === TaskProgressActionType.TOUCHED).length,
     weekActionCounts: actionCounts,
     topResistanceReasons,
   };

@@ -36,7 +36,13 @@ export async function createTaskAction(formData: FormData) {
   redirect(`/tasks/${task.id}`);
 }
 
-export async function updateTaskAction(id: string, formData: FormData) {
+export async function updateTaskAction(prevState: any, formData: FormData) {
+  const id = formData.get('id') as string;
+  
+  if (!id) {
+    return { error: '缺少任务ID' };
+  }
+
   const rawData = {
     title: formData.get('title') as string,
     description: formData.get('description') as string || undefined,

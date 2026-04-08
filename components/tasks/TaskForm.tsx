@@ -38,6 +38,7 @@ export function TaskForm({ action, initialData }: TaskFormProps) {
 
   return (
     <form action={formAction} className="space-y-6">
+      {initialData?.id && <input type="hidden" name="id" value={initialData.id} />}
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">基本信息</h3>

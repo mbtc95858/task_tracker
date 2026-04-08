@@ -13,7 +13,6 @@ interface TaskEditClientProps {
 
 export function TaskEditClient({ task }: TaskEditClientProps) {
   const params = useParams();
-  const updateActionWithId = updateTaskAction.bind(null, params.id as string);
 
   const handleDelete = async () => {
     if (confirm('确定要删除这个任务吗？')) {
@@ -37,7 +36,7 @@ export function TaskEditClient({ task }: TaskEditClientProps) {
 
       <Card>
         <CardContent className="pt-6">
-          <TaskForm action={updateActionWithId} initialData={task} />
+          <TaskForm action={updateTaskAction} initialData={{ ...task, id: params.id }} />
         </CardContent>
       </Card>
     </div>

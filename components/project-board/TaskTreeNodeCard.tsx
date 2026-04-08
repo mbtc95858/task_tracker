@@ -1,23 +1,34 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { Select } from '@/components/ui/Select';
+import { Input } from '@/components/ui/Input';
 import {
   TASK_STATUS_LABELS,
   TASK_TYPE_LABELS,
 } from '@/config/constants';
 import { TaskTreeNode, getRecommendedActionForNode } from '@/config/businessRules';
+import { updateProjectTaskStatusAction, deleteProjectTaskAction, createProjectTaskAction } from '@/features/project/taskActions';
 
 interface TaskTreeNodeCardProps {
   node: TaskTreeNode;
   level: number;
+  projectId: string;
   onToggleExpand?: (nodeId: string) => void;
 }
 
-export function TaskTreeNodeCard({ node, level, onToggleExpand }: TaskTreeNodeCardProps) {
+export function TaskTreeNodeCard({ node, level, projectId, onToggleExpand }: TaskTreeNodeCardProps) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const [expanded, setExpanded] = useState(node.isExpanded);
+  const [showAddChild, setShowAddChild] = useState(false);
+  const [showActions, setShowActions] = useState(false);
+  const [childTitle, setChildTitle] = useState('');
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const recommendedAction = getRecommendedActionForNode(node);
 
   const toggleExpand = () => {
@@ -25,6 +36,34 @@ export function TaskTreeNodeCard({ node, level, onToggleExpand }: TaskTreeNodeCa
     if (onToggleExpand) {
       onToggleExpand(node.id);
     }
+  };
+
+  const handleStatusChange = async (status: string) => {
+    await updateProjectTaskStatusAction(node.id, status, projectId);
+    startTransition(() => { router.refresh(); });
+  };
+
+  const handleDelete = async () => {
+    if (!confirmDelete) {
+      setConfirmDelete(true);
+      setTimeout(() => setConfirmDelete(false), 3000);
+      return;
+    }
+    await deleteProjectTaskAction(node.id, projectId);
+    startTransition(() => { router.refresh(); });
+  };
+
+  const handleAddChild = async (formData: FormData) => {
+    formData.set('projectId', projectId);
+    formData.set('parentTaskId', node.id);
+    formData.set('status', 'INBOX');
+    formData.set('priority', 'MEDIUM');
+    formData.set('taskType', 'SUBTASK');
+    await createProjectTaskAction({ error: null }, formData);
+    setChildTitle('');
+    setShowAddChild(false);
+    setExpanded(true);
+    startTransition(() => { router.refresh(); });
   };
 
   const getStatusColor = (status: string) => {
@@ -49,6 +88,8 @@ export function TaskTreeNodeCard({ node, level, onToggleExpand }: TaskTreeNodeCa
           border-l-4 transition-all
           ${node.isHighResistance ? 'border-l-indigo-400 bg-indigo-50/30 dark:bg-indigo-900/10' : 'border-l-gray-300 dark:border-l-gray-600'}
         `}
+        onMouseEnter={() => setShowActions(true)}
+        onMouseLeave={() => { setShowActions(false); setConfirmDelete(false); }}
       >
         <CardHeader className="pb-2">
           <div className="flex items-start justify-between">
@@ -103,14 +144,73 @@ export function TaskTreeNodeCard({ node, level, onToggleExpand }: TaskTreeNodeCa
             </div>
           )}
 
-          <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-            {node.children.length > 0 && (
-              <span>{node.children.length} 个子节点</span>
-            )}
-            <Link href={`/tasks/${node.id}`} className="text-blue-600 hover:underline">
-              查看详情 →
-            </Link>
-          </div>
+          {showActions && (
+            <div className="flex items-center gap-2 pt-2 border-t border-gray-100 dark:border-gray-700">
+              <Select
+                value={node.status}
+                onChange={(e) => handleStatusChange(e.target.value)}
+                className="text-xs py-1 px-2 w-auto"
+              >
+                {Object.entries(TASK_STATUS_LABELS).map(([value, label]) => (
+                  <option key={value} value={value}>{label}</option>
+                ))}
+              </Select>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowAddChild(!showAddChild)}
+              >
+                + 子任务
+              </Button>
+              <Link href={`/tasks/${node.id}`} className="text-blue-600 hover:underline text-xs">
+                详情 →
+              </Link>
+              <div className="flex-1" />
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleDelete}
+                className={confirmDelete ? 'text-red-600' : 'text-red-400 hover:text-red-500'}
+              >
+                {confirmDelete ? '确认?' : '删除'}
+              </Button>
+            </div>
+          )}
+
+          {!showActions && (
+            <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+              {node.children.length > 0 && (
+                <span>{node.children.length} 个子节点</span>
+              )}
+              <Link href={`/tasks/${node.id}`} className="text-blue-600 hover:underline">
+                查看详情 →
+              </Link>
+            </div>
+          )}
+
+          {showAddChild && (
+            <form action={handleAddChild} className="pt-2 border-t border-gray-100 dark:border-gray-700">
+              <div className="flex items-center gap-2">
+                <Input
+                  name="title"
+                  placeholder="子任务标题"
+                  value={childTitle}
+                  onChange={(e) => setChildTitle(e.target.value)}
+                  required
+                  className="text-sm"
+                />
+                <Button type="submit" size="sm">添加</Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowAddChild(false)}
+                >
+                  取消
+                </Button>
+              </div>
+            </form>
+          )}
         </CardContent>
       </Card>
 
@@ -121,6 +221,7 @@ export function TaskTreeNodeCard({ node, level, onToggleExpand }: TaskTreeNodeCa
               key={child.id}
               node={child}
               level={level + 1}
+              projectId={projectId}
               onToggleExpand={onToggleExpand}
             />
           ))}

@@ -15,5 +15,16 @@ export default async function EditProjectPage({ params }: EditProjectPageProps) 
     notFound();
   }
 
-  return <ProjectEditClient project={project} />;
+  const serializedProject = {
+    id: project.id,
+    title: project.title,
+    description: project.description,
+    status: project.status,
+    priority: project.priority,
+    dueDate: project.dueDate,
+    progressMode: project.progressMode,
+    manualProgress: project.manualProgress,
+  };
+
+  return <ProjectEditClient project={serializedProject} />;
 }

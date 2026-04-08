@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-// 字符串枚举值，避免服务端 z.nativeEnum 问题
 const TASK_STATUS_VALUES = ['INBOX', 'PLANNED', 'ACTIVE', 'BLOCKED', 'AVOIDED', 'DONE', 'ARCHIVED'] as const;
 const PRIORITY_VALUES = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'] as const;
 const TASK_PROGRESS_ACTION_VALUES = ['TOUCHED', 'STARTED_TINY_STEP', 'MADE_PROGRESS', 'COMPLETED', 'REACTIVATED'] as const;
@@ -24,6 +23,7 @@ const RESISTANCE_REASON_VALUES = [
 const PAIN_COMPARISON_VALUES = ['LIGHTER_THAN_EXPECTED', 'ABOUT_AS_EXPECTED', 'HEAVIER_THAN_EXPECTED'] as const;
 const PROJECT_STATUS_VALUES = ['ACTIVE', 'PAUSED', 'COMPLETED', 'ARCHIVED'] as const;
 const PROGRESS_MODE_VALUES = ['AUTO', 'MANUAL'] as const;
+const TASK_TYPE_VALUES = ['PROJECT_PHASE', 'MILESTONE', 'TASK', 'SUBTASK'] as const;
 
 export const TaskSchema = z.object({
   title: z.string().min(1, '标题不能为空'),
@@ -47,6 +47,12 @@ export const TaskSchema = z.object({
 
 export const CreateTaskSchema = TaskSchema.omit({});
 export const UpdateTaskSchema = TaskSchema.partial();
+
+export const CreateProjectTaskSchema = TaskSchema.extend({
+  projectId: z.string().min(1),
+  parentTaskId: z.string().optional(),
+  taskType: z.enum(TASK_TYPE_VALUES).optional().default('TASK'),
+});
 
 export const TaskProgressLogSchema = z.object({
   actionType: z.enum(TASK_PROGRESS_ACTION_VALUES),

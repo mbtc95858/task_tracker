@@ -6,6 +6,8 @@ import { CreateProjectSchema, UpdateProjectSchema } from '@/validators';
 import { createProject, updateProject, deleteProject } from './services';
 
 export async function createProjectAction(prevState: any, formData: FormData) {
+  let projectId: string | null = null;
+
   try {
     const data = {
       title: formData.get('title') as string,
@@ -25,16 +27,18 @@ export async function createProjectAction(prevState: any, formData: FormData) {
     }
 
     const project = await createProject(validated.data);
+    projectId = project.id;
     revalidatePath('/projects');
-    redirect(`/projects/${project.id}`);
   } catch (error) {
     return { error: '创建项目失败' };
   }
+
+  redirect(`/projects/${projectId}`);
 }
 
 export async function updateProjectAction(prevState: any, formData: FormData) {
   const id = formData.get('id') as string;
-  
+
   if (!id) {
     return { error: '缺少项目ID' };
   }
@@ -67,11 +71,28 @@ export async function updateProjectAction(prevState: any, formData: FormData) {
 }
 
 export async function deleteProjectAction(id: string) {
+  let deleted = false;
+
   try {
     await deleteProject(id);
     revalidatePath('/projects');
-    redirect('/projects');
+    deleted = true;
   } catch (error) {
-    throw new Error('删除项目失败');
+    return { error: '删除项目失败' };
+  }
+
+  if (deleted) {
+    redirect('/projects');
+  }
+}
+
+export async function updateProjectStatusAction(projectId: string, status: string) {
+  try {
+    await updateProject(projectId, { status });
+    revalidatePath('/projects');
+    revalidatePath(`/projects/${projectId}`);
+    return { error: null };
+  } catch (error) {
+    return { error: '更新项目状态失败' };
   }
 }

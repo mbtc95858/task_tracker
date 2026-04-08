@@ -4,14 +4,15 @@ import { TaskTreeNodeCard } from './TaskTreeNodeCard';
 interface ProjectTreeBoardProps {
   tree: TaskTreeNode[];
   projectTitle: string;
+  projectId: string;
 }
 
-export function ProjectTreeBoard({ tree, projectTitle }: ProjectTreeBoardProps) {
+export function ProjectTreeBoard({ tree, projectTitle, projectId }: ProjectTreeBoardProps) {
   return (
     <div className="space-y-8">
       <div className="border-l-2 border-gray-200 dark:border-gray-700 pl-4 space-y-8">
         {tree.map((rootNode) => (
-          <TaskTreeNodeCard key={rootNode.id} node={rootNode} level={0} />
+          <TaskTreeNodeCard key={rootNode.id} node={rootNode} level={0} projectId={projectId} />
         ))}
       </div>
 

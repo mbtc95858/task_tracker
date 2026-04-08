@@ -1,6 +1,11 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export function Navbar() {
+  const pathname = usePathname();
+  
   const navItems = [
     { href: '/dashboard', label: '首页' },
     { href: '/projects', label: '项目' },
@@ -8,6 +13,13 @@ export function Navbar() {
     { href: '/daily-review', label: '每日复盘' },
     { href: '/insights', label: '洞察' },
   ];
+
+  const isActive = (href: string) => {
+    if (href === '/dashboard') {
+      return pathname === '/' || pathname === '/dashboard';
+    }
+    return pathname.startsWith(href);
+  };
 
   return (
     <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
@@ -23,7 +35,11 @@ export function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  isActive(item.href)
+                    ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                }`}
               >
                 {item.label}
               </Link>

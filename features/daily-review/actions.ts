@@ -4,7 +4,9 @@ import { revalidatePath } from 'next/cache';
 import { DailyReviewSchema } from '@/validators';
 import * as reviewServices from './services';
 
-export async function saveReviewAction(formData: FormData) {
+type ActionState = { error?: string } | { success?: boolean };
+
+export async function saveReviewAction(prevState: ActionState, formData: FormData): Promise<ActionState> {
   const rawData = {
     date: new Date().toISOString(),
     mostAvoidedTaskId: formData.get('mostAvoidedTaskId') as string || undefined,

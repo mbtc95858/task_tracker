@@ -18,7 +18,7 @@ interface DailyReviewClientProps {
 }
 
 export default function DailyReviewClient({ todayReview, reviewHistory, tasks }: DailyReviewClientProps) {
-  const [state, formAction] = useFormState(saveReviewAction, { error: null });
+  const [state, formAction] = useFormState(saveReviewAction, {});
   const [showAdvanced, setShowAdvanced] = useState(false);
   const initialData = todayReview || {};
 
@@ -140,7 +140,7 @@ export default function DailyReviewClient({ todayReview, reviewHistory, tasks }:
               </div>
             )}
 
-            {state?.error && (
+            {'error' in state && state.error && (
               <div className="p-3 bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200 rounded-lg text-sm">
                 {state.error}
               </div>

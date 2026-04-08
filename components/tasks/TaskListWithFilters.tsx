@@ -5,8 +5,16 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { TASK_STATUS_LABELS, PRIORITY_LABELS } from '@/config/constants';
-import { isHighResistanceTask } from '@/config/businessRules';
 import { parseResistanceReasons } from '@/config/businessRules';
+
+function checkHighResistance(task: any): boolean {
+  return (
+    task.status === 'AVOIDED' ||
+    (task.fearLevel !== null && task.fearLevel >= 7) ||
+    (task.resistanceLevel !== null && task.resistanceLevel >= 7) ||
+    (task.startDifficulty !== null && task.startDifficulty >= 7)
+  );
+}
 
 interface Task {
   id: string;
@@ -57,7 +65,7 @@ export function TaskListWithFilters({ tasks }: TaskListWithFiltersProps) {
       return false;
     }
 
-    if (resistanceFilter === 'HIGH_RESISTANCE' && !isHighResistanceTask(task)) {
+    if (resistanceFilter === 'HIGH_RESISTANCE' && !checkHighResistance(task)) {
       return false;
     }
 
@@ -120,12 +128,11 @@ export function TaskListWithFilters({ tasks }: TaskListWithFiltersProps) {
       ) : (
         <div className="grid gap-4">
           {filteredTasks.map((task) => {
-            const isHighResistance = isHighResistanceTask(task);
             const resistanceReasons = parseResistanceReasons(task.resistanceReasons);
 
             return (
               <Link key={task.id} href={`/tasks/${task.id}`}>
-                <Card className={`hover:shadow-md transition-shadow cursor-pointer ${isHighResistance ? 'border-l-4 border-l-indigo-400' : ''}`}>
+                <Card className={`hover:shadow-md transition-shadow cursor-pointer ${checkHighResistance(task) ? 'border-l-4 border-l-indigo-400' : ''}`}>
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -144,7 +151,7 @@ export function TaskListWithFilters({ tasks }: TaskListWithFiltersProps) {
                           <span className="text-sm text-gray-500 dark:text-gray-400">
                             优先级: {PRIORITY_LABELS[task.priority as keyof typeof PRIORITY_LABELS]}
                           </span>
-                          {isHighResistance && (
+                          {checkHighResistance(task) && (
                             <span className="text-sm text-indigo-600 dark:text-indigo-400 font-medium">
                               💪 挑战性
                             </span>

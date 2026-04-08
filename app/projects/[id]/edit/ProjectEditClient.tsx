@@ -29,7 +29,7 @@ export function ProjectEditClient({ project }: ProjectEditClientProps) {
           </Link>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">编辑项目</h1>
         </div>
-        <Button variant="destructive" onClick={handleDelete}>
+        <Button variant="danger" onClick={handleDelete}>
           删除项目
         </Button>
       </div>

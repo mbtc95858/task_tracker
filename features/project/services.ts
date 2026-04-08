@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { ProjectStatus, Priority, ProgressMode } from '@/config/constants';
-import { isHighResistanceTask } from '@/config/businessRules';
+import { isHighResistanceTask, buildTaskTree } from '@/config/businessRules';
 
 export async function getProjects() {
   const projects = await prisma.project.findMany({
@@ -54,10 +54,13 @@ export async function getProject(id: string) {
   const completedCount = tasks.filter((t) => t.status === 'DONE').length;
   const progress = tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0;
 
+  const tree = buildTaskTree(tasks);
+
   return {
     ...project,
     progress,
     tasks,
+    tree,
     highResistanceNodes,
     recommendedNode,
   };

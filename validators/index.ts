@@ -5,6 +5,9 @@ import {
   TaskProgressActionType,
   ResistanceReason,
   PainComparison,
+  ProjectStatus,
+  TaskType,
+  ProgressMode,
 } from '@/config/constants';
 
 export const TaskSchema = z.object({
@@ -45,3 +48,17 @@ export const DailyReviewSchema = z.object({
   painComparison: z.nativeEnum(PainComparison).optional(),
   note: z.string().optional(),
 });
+
+export const ProjectSchema = z.object({
+  title: z.string().min(1, '标题不能为空'),
+  description: z.string().optional(),
+  status: z.nativeEnum(ProjectStatus),
+  priority: z.nativeEnum(Priority),
+  dueDate: z.string().optional().transform((val) => val ? new Date(val) : undefined),
+  progressMode: z.nativeEnum(ProgressMode),
+  manualProgress: z.number().int().min(0).max(100).optional(),
+  orderIndex: z.number().int().optional(),
+});
+
+export const CreateProjectSchema = ProjectSchema.omit({ orderIndex: true });
+export const UpdateProjectSchema = ProjectSchema.partial();

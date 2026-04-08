@@ -3,6 +3,7 @@ import Link from 'next/link';
 export function Navbar() {
   const navItems = [
     { href: '/dashboard', label: '首页' },
+    { href: '/projects', label: '项目' },
     { href: '/tasks', label: '任务' },
     { href: '/daily-review', label: '每日复盘' },
     { href: '/insights', label: '洞察' },

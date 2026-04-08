@@ -106,3 +106,45 @@ export const PAIN_COMPARISON_LABELS: Record<PainComparison, string> = {
   [PainComparison.ABOUT_AS_EXPECTED]: '差不多',
   [PainComparison.HEAVIER_THAN_EXPECTED]: '比预想更重',
 };
+
+// ------------------------------
+// 新增 Project 相关枚举
+// ------------------------------
+
+export enum ProjectStatus {
+  ACTIVE = 'ACTIVE',
+  PAUSED = 'PAUSED',
+  COMPLETED = 'COMPLETED',
+  ARCHIVED = 'ARCHIVED',
+}
+
+export enum TaskType {
+  PROJECT_PHASE = 'PROJECT_PHASE',
+  MILESTONE = 'MILESTONE',
+  TASK = 'TASK',
+  SUBTASK = 'SUBTASK',
+}
+
+export enum ProgressMode {
+  AUTO = 'AUTO',
+  MANUAL = 'MANUAL',
+}
+
+export const PROJECT_STATUS_LABELS: Record<ProjectStatus, string> = {
+  [ProjectStatus.ACTIVE]: '进行中',
+  [ProjectStatus.PAUSED]: '暂停',
+  [ProjectStatus.COMPLETED]: '已完成',
+  [ProjectStatus.ARCHIVED]: '已归档',
+};
+
+export const TASK_TYPE_LABELS: Record<TaskType, string> = {
+  [TaskType.PROJECT_PHASE]: '阶段',
+  [TaskType.MILESTONE]: '里程碑',
+  [TaskType.TASK]: '任务',
+  [TaskType.SUBTASK]: '子任务',
+};
+
+export const PROGRESS_MODE_LABELS: Record<ProgressMode, string> = {
+  [ProgressMode.AUTO]: '自动计算',
+  [ProgressMode.MANUAL]: '手动填写',
+};

@@ -1,5 +1,4 @@
 import { prisma } from '@/lib/prisma';
-import { ProjectStatus, Priority, ProgressMode } from '@/config/constants';
 import { isHighResistanceTask, buildTaskTree } from '@/config/businessRules';
 
 export async function getProjects() {
@@ -83,10 +82,10 @@ export async function createProject(data: {
     data: {
       title: data.title,
       description: data.description,
-      status: data.status || ProjectStatus.ACTIVE,
-      priority: data.priority || Priority.MEDIUM,
+      status: data.status || 'ACTIVE',
+      priority: data.priority || 'MEDIUM',
       dueDate: data.dueDate,
-      progressMode: data.progressMode || ProgressMode.AUTO,
+      progressMode: data.progressMode || 'AUTO',
       manualProgress: data.manualProgress,
       orderIndex: (maxOrder._max.orderIndex || 0) + 1,
     },

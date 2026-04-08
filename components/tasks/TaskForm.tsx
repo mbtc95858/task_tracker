@@ -4,9 +4,28 @@ import { useFormState } from 'react-dom';
 import { Button } from '@/components/ui/Button';
 import { Input, Textarea } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
-import { TaskStatus, Priority, ResistanceReason } from '@/config/constants';
 import { TASK_STATUS_LABELS, PRIORITY_LABELS, RESISTANCE_REASON_LABELS } from '@/config/constants';
 import { parseResistanceReasons } from '@/config/businessRules';
+
+const TASK_STATUS_VALUES = ['INBOX', 'PLANNED', 'ACTIVE', 'BLOCKED', 'AVOIDED', 'DONE', 'ARCHIVED'] as const;
+const PRIORITY_VALUES = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'] as const;
+const RESISTANCE_REASON_VALUES = [
+  'DONT_KNOW_HOW_TO_START',
+  'TOO_BIG_OR_VAGUE',
+  'FEAR_OF_FAILURE',
+  'FEAR_OF_RESULT',
+  'TOO_ANNOYING',
+  'TOO_BORING',
+  'TOO_MENTALLY_DEMANDING',
+  'TOO_MANY_DECISIONS',
+  'FAILED_BEFORE',
+  'SHAME_FROM_DELAY',
+  'NOT_SURE_IF_WORTH_IT',
+  'SOCIAL_PRESSURE',
+  'PERFECTIONISM',
+  'FEAR_IT_WONT_END',
+  'LOW_ENERGY',
+] as const;
 
 interface TaskFormProps {
   action: (prevState: any, formData: FormData) => Promise<any>;
@@ -41,9 +60,9 @@ export function TaskForm({ action, initialData }: TaskFormProps) {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">优先级</label>
-              <Select name="priority" defaultValue={initialData?.priority || Priority.MEDIUM}>
-                {Object.entries(Priority).map(([key, value]) => (
-                  <option key={key} value={value}>
+              <Select name="priority" defaultValue={initialData?.priority || 'MEDIUM'}>
+                {PRIORITY_VALUES.map((value) => (
+                  <option key={value} value={value}>
                     {PRIORITY_LABELS[value as keyof typeof PRIORITY_LABELS]}
                   </option>
                 ))}
@@ -51,9 +70,9 @@ export function TaskForm({ action, initialData }: TaskFormProps) {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">状态</label>
-              <Select name="status" defaultValue={initialData?.status || TaskStatus.INBOX}>
-                {Object.entries(TaskStatus).map(([key, value]) => (
-                  <option key={key} value={value}>
+              <Select name="status" defaultValue={initialData?.status || 'INBOX'}>
+                {TASK_STATUS_VALUES.map((value) => (
+                  <option key={value} value={value}>
                     {TASK_STATUS_LABELS[value as keyof typeof TASK_STATUS_LABELS]}
                   </option>
                 ))}
@@ -102,8 +121,8 @@ export function TaskForm({ action, initialData }: TaskFormProps) {
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">阻力原因</label>
             <div className="grid grid-cols-2 gap-2">
-              {Object.entries(ResistanceReason).map(([key, value]) => (
-                <label key={key} className="flex items-center gap-2">
+              {RESISTANCE_REASON_VALUES.map((value) => (
+                <label key={value} className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     name="resistanceReasons"

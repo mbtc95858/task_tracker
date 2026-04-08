@@ -6,13 +6,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input, Textarea } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import {
-  ProjectStatus,
-  Priority,
-  ProgressMode,
   PROJECT_STATUS_LABELS,
   PRIORITY_LABELS,
   PROGRESS_MODE_LABELS,
 } from '@/config/constants';
+
+const PROJECT_STATUS_VALUES = ['ACTIVE', 'PAUSED', 'COMPLETED', 'ARCHIVED'] as const;
+const PRIORITY_VALUES = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'] as const;
+const PROGRESS_MODE_VALUES = ['AUTO', 'MANUAL'] as const;
 
 interface ProjectFormProps {
   initialData?: any;
@@ -55,9 +56,9 @@ export function ProjectForm({ initialData, action, submitLabel }: ProjectFormPro
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 状态
               </label>
-              <Select name="status" defaultValue={data.status || ProjectStatus.ACTIVE}>
-                {Object.entries(ProjectStatus).map(([key, value]) => (
-                  <option key={key} value={value}>
+              <Select name="status" defaultValue={data.status || 'ACTIVE'}>
+                {PROJECT_STATUS_VALUES.map((value) => (
+                  <option key={value} value={value}>
                     {PROJECT_STATUS_LABELS[value as keyof typeof PROJECT_STATUS_LABELS]}
                   </option>
                 ))}
@@ -68,9 +69,9 @@ export function ProjectForm({ initialData, action, submitLabel }: ProjectFormPro
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 优先级
               </label>
-              <Select name="priority" defaultValue={data.priority || Priority.MEDIUM}>
-                {Object.entries(Priority).map(([key, value]) => (
-                  <option key={key} value={value}>
+              <Select name="priority" defaultValue={data.priority || 'MEDIUM'}>
+                {PRIORITY_VALUES.map((value) => (
+                  <option key={value} value={value}>
                     {PRIORITY_LABELS[value as keyof typeof PRIORITY_LABELS]}
                   </option>
                 ))}
@@ -94,9 +95,9 @@ export function ProjectForm({ initialData, action, submitLabel }: ProjectFormPro
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 进度模式
               </label>
-              <Select name="progressMode" defaultValue={data.progressMode || ProgressMode.AUTO}>
-                {Object.entries(ProgressMode).map(([key, value]) => (
-                  <option key={key} value={value}>
+              <Select name="progressMode" defaultValue={data.progressMode || 'AUTO'}>
+                {PROGRESS_MODE_VALUES.map((value) => (
+                  <option key={value} value={value}>
                     {PROGRESS_MODE_LABELS[value as keyof typeof PROGRESS_MODE_LABELS]}
                   </option>
                 ))}
@@ -104,7 +105,7 @@ export function ProjectForm({ initialData, action, submitLabel }: ProjectFormPro
             </div>
           </div>
 
-          {data.progressMode === ProgressMode.MANUAL && (
+          {data.progressMode === 'MANUAL' && (
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 手动进度 (0-100)

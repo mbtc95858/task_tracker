@@ -6,8 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input, Textarea } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { saveReviewAction } from '@/features/daily-review/actions';
-import { PainComparison } from '@/config/constants';
 import { PAIN_COMPARISON_LABELS } from '@/config/constants';
+
+const PAIN_COMPARISON_VALUES = ['LIGHTER_THAN_EXPECTED', 'ABOUT_AS_EXPECTED', 'HEAVIER_THAN_EXPECTED'] as const;
 
 interface DailyReviewClientProps {
   todayReview: any;
@@ -103,8 +104,8 @@ export default function DailyReviewClient({ todayReview, reviewHistory, tasks }:
               </label>
               <Select name="painComparison" defaultValue={initialData.painComparison || ''}>
                 <option value="">-- 选择 --</option>
-                {Object.entries(PainComparison).map(([key, value]) => (
-                  <option key={key} value={value}>
+                {PAIN_COMPARISON_VALUES.map((value) => (
+                  <option key={value} value={value}>
                     {PAIN_COMPARISON_LABELS[value as keyof typeof PAIN_COMPARISON_LABELS]}
                   </option>
                 ))}

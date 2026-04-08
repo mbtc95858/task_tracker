@@ -4,8 +4,9 @@ import { useFormState } from 'react-dom';
 import { Button } from '@/components/ui/Button';
 import { Input, Textarea } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
-import { TaskProgressActionType } from '@/config/constants';
 import { TASK_PROGRESS_ACTION_LABELS } from '@/config/constants';
+
+const TASK_PROGRESS_ACTION_VALUES = ['TOUCHED', 'STARTED_TINY_STEP', 'MADE_PROGRESS', 'COMPLETED', 'REACTIVATED'] as const;
 
 interface ProgressLogFormProps {
   taskId: string;
@@ -22,8 +23,8 @@ export function ProgressLogForm({ taskId, action }: ProgressLogFormProps) {
           动作类型
         </label>
         <Select name="actionType" required>
-          {Object.entries(TaskProgressActionType).map(([key, value]) => (
-            <option key={key} value={value}>
+          {TASK_PROGRESS_ACTION_VALUES.map((value) => (
+            <option key={value} value={value}>
               {TASK_PROGRESS_ACTION_LABELS[value as keyof typeof TASK_PROGRESS_ACTION_LABELS]}
             </option>
           ))}

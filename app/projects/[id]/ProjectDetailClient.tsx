@@ -216,7 +216,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
             <div className="text-center py-8">
               <p className="text-gray-500 dark:text-gray-400">还没有顶层节点</p>
               <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
-                点击上方"添加任务"开始拆解项目
+                点击上方添加任务开始拆解项目
               </p>
             </div>
           ) : (

@@ -1,50 +1,43 @@
 import { prisma } from '@/lib/prisma';
 import { isHighResistanceTask, buildTaskTree } from '@/config/businessRules';
+import { ProjectWithStats } from '@/types';
 
-export async function getProjects() {
+export async function getProjects(): Promise<ProjectWithStats[]> {
   const projects = await prisma.project.findMany({
     orderBy: { orderIndex: 'asc' },
+    include: { tasks: true },
   });
 
-  const projectsWithStats = await Promise.all(
-    projects.map(async (project) => {
-      const tasks = await prisma.task.findMany({
-        where: { projectId: project.id },
-      });
+  return projects.map((project) => {
+    const tasks = project.tasks;
+    const highResistanceCount = tasks.filter((t) => isHighResistanceTask(t)).length;
+    const recommendedNode = tasks.find((t) =>
+      t.status !== 'DONE' && t.status !== 'ARCHIVED'
+    ) || null;
 
-      const highResistanceCount = tasks.filter((t) => isHighResistanceTask(t)).length;
-      const recommendedNode = tasks.find((t) =>
-        t.status !== 'DONE' && t.status !== 'ARCHIVED'
-      ) || null;
+    const completedCount = tasks.filter((t) => t.status === 'DONE').length;
+    const progress = tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0;
 
-      const completedCount = tasks.filter((t) => t.status === 'DONE').length;
-      const progress = tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0;
-
-      return {
-        ...project,
-        progress,
-        highResistanceCount,
-        recommendedNode,
-      };
-    })
-  );
-
-  return projectsWithStats;
+    return {
+      ...project,
+      progress,
+      highResistanceCount,
+      recommendedNode,
+    };
+  });
 }
 
 export async function getProject(id: string) {
   const project = await prisma.project.findUnique({
     where: { id },
-    include: { tasks: true },
+    include: { 
+      tasks: { include: { progressLogs: true } },
+    },
   });
 
   if (!project) return null;
 
-  const tasks = await prisma.task.findMany({
-    where: { projectId: id },
-    include: { progressLogs: true },
-  });
-
+  const tasks = project.tasks;
   const highResistanceNodes = tasks.filter((t) => isHighResistanceTask(t));
   const recommendedNode = tasks.find((t) =>
     t.status !== 'DONE' && t.status !== 'ARCHIVED'

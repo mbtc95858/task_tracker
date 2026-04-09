@@ -3,9 +3,9 @@
 import { revalidatePath } from 'next/cache';
 import { CreateProjectTaskSchema } from '@/validators';
 import { createTask, updateTask, deleteTask } from '../task/services';
-import { stringifyResistanceReasons } from '@/config/businessRules';
+import { ActionState } from '@/types';
 
-export async function createProjectTaskAction(prevState: any, formData: FormData) {
+export async function createProjectTaskAction(prevState: ActionState, formData: FormData): Promise<ActionState> {
   const projectId = formData.get('projectId') as string;
 
   if (!projectId) {
@@ -41,15 +41,12 @@ export async function createProjectTaskAction(prevState: any, formData: FormData
       return { error: validated.error.errors[0].message };
     }
 
-    const taskData = {
-      ...validated.data,
-      resistanceReasons: stringifyResistanceReasons(validated.data.resistanceReasons || []),
-    };
+    const { projectId: _, taskType, parentTaskId, ...taskInput } = validated.data;
 
-    await createTask(taskData);
+    await createTask(taskInput);
     revalidatePath(`/projects/${projectId}`);
     revalidatePath(`/projects/${projectId}/board`);
-    return { error: null };
+    return { success: true };
   } catch (error) {
     return { error: '创建任务失败' };
   }
@@ -59,24 +56,24 @@ export async function updateProjectTaskStatusAction(
   taskId: string,
   status: string,
   projectId: string
-) {
+): Promise<ActionState> {
   try {
-    await updateTask(taskId, { status });
+    await updateTask(taskId, { status: status as any });
     revalidatePath(`/projects/${projectId}`);
     revalidatePath(`/projects/${projectId}/board`);
     revalidatePath(`/tasks/${taskId}`);
-    return { error: null };
+    return { success: true };
   } catch (error) {
     return { error: '更新任务状态失败' };
   }
 }
 
-export async function deleteProjectTaskAction(taskId: string, projectId: string) {
+export async function deleteProjectTaskAction(taskId: string, projectId: string): Promise<ActionState> {
   try {
     await deleteTask(taskId);
     revalidatePath(`/projects/${projectId}`);
     revalidatePath(`/projects/${projectId}/board`);
-    return { error: null };
+    return { success: true };
   } catch (error) {
     return { error: '删除任务失败' };
   }

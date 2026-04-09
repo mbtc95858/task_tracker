@@ -8,12 +8,16 @@ export enum TaskStatus {
   ARCHIVED = 'ARCHIVED',
 }
 
+export const TASK_STATUS_VALUES = Object.values(TaskStatus) as [TaskStatus, ...TaskStatus[]];
+
 export enum Priority {
   LOW = 'LOW',
   MEDIUM = 'MEDIUM',
   HIGH = 'HIGH',
   CRITICAL = 'CRITICAL',
 }
+
+export const PRIORITY_VALUES = Object.values(Priority) as [Priority, ...Priority[]];
 
 export enum TaskProgressActionType {
   TOUCHED = 'TOUCHED',
@@ -22,6 +26,8 @@ export enum TaskProgressActionType {
   COMPLETED = 'COMPLETED',
   REACTIVATED = 'REACTIVATED',
 }
+
+export const TASK_PROGRESS_ACTION_VALUES = Object.values(TaskProgressActionType) as [TaskProgressActionType, ...TaskProgressActionType[]];
 
 export enum ResistanceReason {
   DONT_KNOW_HOW_TO_START = 'DONT_KNOW_HOW_TO_START',
@@ -41,11 +47,15 @@ export enum ResistanceReason {
   LOW_ENERGY = 'LOW_ENERGY',
 }
 
+export const RESISTANCE_REASON_VALUES = Object.values(ResistanceReason) as [ResistanceReason, ...ResistanceReason[]];
+
 export enum PainComparison {
   LIGHTER_THAN_EXPECTED = 'LIGHTER_THAN_EXPECTED',
   ABOUT_AS_EXPECTED = 'ABOUT_AS_EXPECTED',
   HEAVIER_THAN_EXPECTED = 'HEAVIER_THAN_EXPECTED',
 }
+
+export const PAIN_COMPARISON_VALUES = Object.values(PainComparison) as [PainComparison, ...PainComparison[]];
 
 export enum PointSourceType {
   TASK_CREATED = 'TASK_CREATED',
@@ -118,6 +128,8 @@ export enum ProjectStatus {
   ARCHIVED = 'ARCHIVED',
 }
 
+export const PROJECT_STATUS_VALUES = Object.values(ProjectStatus) as [ProjectStatus, ...ProjectStatus[]];
+
 export enum TaskType {
   PROJECT_PHASE = 'PROJECT_PHASE',
   MILESTONE = 'MILESTONE',
@@ -125,10 +137,14 @@ export enum TaskType {
   SUBTASK = 'SUBTASK',
 }
 
+export const TASK_TYPE_VALUES = Object.values(TaskType) as [TaskType, ...TaskType[]];
+
 export enum ProgressMode {
   AUTO = 'AUTO',
   MANUAL = 'MANUAL',
 }
+
+export const PROGRESS_MODE_VALUES = Object.values(ProgressMode) as [ProgressMode, ...ProgressMode[]];
 
 export const PROJECT_STATUS_LABELS: Record<ProjectStatus, string> = {
   [ProjectStatus.ACTIVE]: '进行中',

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { Button } from '@/components/ui/Button';
 import { getTasks } from '@/features/task/services';
 import { TaskListWithFilters } from '@/components/tasks/TaskListWithFilters';
@@ -15,7 +16,9 @@ export default async function TasksPage() {
         </Link>
       </div>
 
-      <TaskListWithFilters tasks={tasks} />
+      <Suspense fallback={<div>加载中...</div>}>
+        <TaskListWithFilters tasks={tasks} />
+      </Suspense>
     </div>
   );
 }

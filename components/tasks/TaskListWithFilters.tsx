@@ -1,42 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { TASK_STATUS_LABELS, PRIORITY_LABELS } from '@/config/constants';
-import { parseResistanceReasons } from '@/config/businessRules';
-
-function checkHighResistance(task: any): boolean {
-  return (
-    task.status === 'AVOIDED' ||
-    (task.fearLevel !== null && task.fearLevel >= 7) ||
-    (task.resistanceLevel !== null && task.resistanceLevel >= 7) ||
-    (task.startDifficulty !== null && task.startDifficulty >= 7)
-  );
-}
-
-interface Task {
-  id: string;
-  title: string;
-  description: string | null;
-  status: string;
-  priority: string;
-  fearLevel: number | null;
-  resistanceLevel: number | null;
-  clarityLevel: number | null;
-  painLevel: number | null;
-  startDifficulty: number | null;
-  resistanceReasons: string | null;
-  contactStep: string | null;
-  tinyStep: string | null;
-  normalStep: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { parseResistanceReasons, isHighResistanceTask } from '@/config/businessRules';
+import { TaskWithRelations } from '@/types';
 
 interface TaskListWithFiltersProps {
-  tasks: Task[];
+  tasks: TaskWithRelations[];
 }
 
 const STATUS_OPTIONS = [
@@ -57,15 +31,20 @@ const FILTER_OPTIONS = [
 ];
 
 export function TaskListWithFilters({ tasks }: TaskListWithFiltersProps) {
-  const [statusFilter, setStatusFilter] = useState<string>('ALL');
-  const [resistanceFilter, setResistanceFilter] = useState<string>('ALL');
+  const searchParams = useSearchParams();
+  
+  const initialStatus = searchParams.get('status') || 'ALL';
+  const initialResistance = searchParams.get('resistance') || 'ALL';
+  
+  const [statusFilter, setStatusFilter] = useState<string>(initialStatus);
+  const [resistanceFilter, setResistanceFilter] = useState<string>(initialResistance);
 
   const filteredTasks = tasks.filter((task) => {
     if (statusFilter !== 'ALL' && task.status !== statusFilter) {
       return false;
     }
 
-    if (resistanceFilter === 'HIGH_RESISTANCE' && !checkHighResistance(task)) {
+    if (resistanceFilter === 'HIGH_RESISTANCE' && !isHighResistanceTask(task)) {
       return false;
     }
 
@@ -132,7 +111,7 @@ export function TaskListWithFilters({ tasks }: TaskListWithFiltersProps) {
 
             return (
               <Link key={task.id} href={`/tasks/${task.id}`}>
-                <Card className={`hover:shadow-md transition-shadow cursor-pointer ${checkHighResistance(task) ? 'border-l-4 border-l-indigo-400' : ''}`}>
+                <Card className={`hover:shadow-md transition-shadow cursor-pointer ${isHighResistanceTask(task) ? 'border-l-4 border-l-indigo-400' : ''}`}>
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -151,7 +130,7 @@ export function TaskListWithFilters({ tasks }: TaskListWithFiltersProps) {
                           <span className="text-sm text-gray-500 dark:text-gray-400">
                             优先级: {PRIORITY_LABELS[task.priority as keyof typeof PRIORITY_LABELS]}
                           </span>
-                          {checkHighResistance(task) && (
+                          {isHighResistanceTask(task) && (
                             <span className="text-sm text-indigo-600 dark:text-indigo-400 font-medium">
                               💪 挑战性
                             </span>

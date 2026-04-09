@@ -1,13 +1,22 @@
 import { prisma } from '@/lib/prisma';
 import { Task, TaskProgressLog } from '@prisma/client';
 import { parseResistanceReasons, stringifyResistanceReasons } from '@/config/businessRules';
+import { CreateTaskInput, UpdateTaskInput } from '@/types';
+import { PointSourceType } from '@/config/constants';
+import { POINT_RULES } from '@/config/pointRules';
 
-export async function getTasks(filter?: {
+interface TaskFilter {
   status?: string;
   priority?: string;
   search?: string;
-}) {
-  const where: any = {};
+}
+
+export async function getTasks(filter?: TaskFilter) {
+  const where: {
+    status?: string;
+    priority?: string;
+    title?: { contains: string };
+  } = {};
   
   if (filter?.status) {
     where.status = filter.status;
@@ -35,35 +44,83 @@ export async function getTask(id: string) {
   });
 }
 
-export async function createTask(data: any) {
-  const taskData = {
-    ...data,
-    resistanceReasons: stringifyResistanceReasons(data.resistanceReasons || []),
-  };
+export async function createTask(data: CreateTaskInput) {
+  return await prisma.$transaction(async (tx) => {
+    const taskData: any = {
+      ...data,
+      resistanceReasons: stringifyResistanceReasons(data.resistanceReasons || []),
+    };
 
-  const task = await prisma.task.create({ data: taskData });
+    const task = await tx.task.create({ data: taskData });
 
-  await prisma.pointTransaction.create({
-    data: {
-      sourceType: 'TASK_CREATED',
-      sourceId: task.id,
-      delta: 1,
-      reason: '创建任务',
-    },
+    const rule = POINT_RULES[PointSourceType.TASK_CREATED];
+    await tx.pointTransaction.create({
+      data: {
+        sourceType: PointSourceType.TASK_CREATED,
+        sourceId: task.id,
+        delta: rule.delta,
+        reason: rule.reason,
+      },
+    });
+
+    return task;
   });
-
-  return task;
 }
 
-export async function updateTask(id: string, data: any) {
-  const updateData = { ...data };
-  if (data.resistanceReasons !== undefined) {
-    updateData.resistanceReasons = stringifyResistanceReasons(data.resistanceReasons);
-  }
+export async function updateTask(id: string, data: UpdateTaskInput) {
+  return await prisma.$transaction(async (tx) => {
+    const currentTask = await tx.task.findUnique({
+      where: { id },
+    });
 
-  return prisma.task.update({
-    where: { id },
-    data: updateData,
+    const updateData: any = { ...data };
+    if (data.resistanceReasons !== undefined) {
+      updateData.resistanceReasons = stringifyResistanceReasons(data.resistanceReasons);
+    }
+
+    const task = await tx.task.update({
+      where: { id },
+      data: updateData,
+    });
+
+    const hasResistanceFields = (data.fearLevel !== undefined || 
+      data.resistanceLevel !== undefined || 
+      data.clarityLevel !== undefined || 
+      data.painLevel !== undefined || 
+      data.startDifficulty !== undefined || 
+      (data.resistanceReasons !== undefined && data.resistanceReasons.length > 0) ||
+      data.resistanceNote !== undefined);
+
+    const hadNoResistanceData = !currentTask?.fearLevel && 
+      !currentTask?.resistanceLevel && 
+      !currentTask?.clarityLevel && 
+      !currentTask?.painLevel && 
+      !currentTask?.startDifficulty && 
+      (!currentTask?.resistanceReasons || parseResistanceReasons(currentTask.resistanceReasons).length === 0) &&
+      !currentTask?.resistanceNote;
+
+    if (hasResistanceFields && hadNoResistanceData) {
+      const existingPoints = await tx.pointTransaction.findFirst({
+        where: {
+          sourceType: PointSourceType.RESISTANCE_FILLED,
+          sourceId: id,
+        },
+      });
+
+      if (!existingPoints) {
+        const rule = POINT_RULES[PointSourceType.RESISTANCE_FILLED];
+        await tx.pointTransaction.create({
+          data: {
+            sourceType: PointSourceType.RESISTANCE_FILLED,
+            sourceId: id,
+            delta: rule.delta,
+            reason: rule.reason,
+          },
+        });
+      }
+    }
+
+    return task;
   });
 }
 

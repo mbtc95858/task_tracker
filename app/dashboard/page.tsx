@@ -130,36 +130,46 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-        <Card>
-          <CardContent className="p-4 text-center">
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{dashboard.totalTasks}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">总任务</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4 text-center">
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{dashboard.activeTasks}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">进行中</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4 text-center">
-            <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{dashboard.highResistanceTasks}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">挑战性</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4 text-center">
-            <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{dashboard.todayProgressCount}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">今日推进</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4 text-center">
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{points.totalPoints}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">总积分</p>
-          </CardContent>
-        </Card>
+        <Link href="/tasks">
+          <Card className="cursor-pointer hover:shadow-md transition-shadow">
+            <CardContent className="p-4 text-center">
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{dashboard.totalTasks}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">总任务</p>
+            </CardContent>
+          </Card>
+        </Link>
+        <Link href="/tasks?status=ACTIVE">
+          <Card className="cursor-pointer hover:shadow-md transition-shadow">
+            <CardContent className="p-4 text-center">
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{dashboard.activeTasks}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">进行中</p>
+            </CardContent>
+          </Card>
+        </Link>
+        <Link href="/tasks?resistance=HIGH_RESISTANCE">
+          <Card className="cursor-pointer hover:shadow-md transition-shadow">
+            <CardContent className="p-4 text-center">
+              <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{dashboard.highResistanceTasks}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">挑战性</p>
+            </CardContent>
+          </Card>
+        </Link>
+        <Link href="/daily-review">
+          <Card className="cursor-pointer hover:shadow-md transition-shadow">
+            <CardContent className="p-4 text-center">
+              <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{dashboard.todayProgressCount}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">今日推进</p>
+            </CardContent>
+          </Card>
+        </Link>
+        <Link href="/insights">
+          <Card className="cursor-pointer hover:shadow-md transition-shadow">
+            <CardContent className="p-4 text-center">
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{points.totalPoints}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">总积分</p>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
     </div>
   );

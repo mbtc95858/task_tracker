@@ -1,5 +1,5 @@
-import { Task, TaskProgressLog, Project } from '@prisma/client';
-import { TaskStatus, TaskProgressActionType, Priority } from './constants';
+import { Task, TaskProgressLog } from '@prisma/client';
+import { TaskStatus, TaskProgressActionType } from './constants';
 
 export function isHighResistanceTask(task: Task): boolean {
   return (
@@ -72,9 +72,10 @@ export interface TaskTreeNode {
   isExpanded: boolean;
   children: TaskTreeNode[];
   subTasksCount: number;
+  orderIndex: number;
 }
 
-export function buildTaskTree(tasks: any[]): TaskTreeNode[] {
+export function buildTaskTree(tasks: Task[]): TaskTreeNode[] {
   const taskMap = new Map<string, TaskTreeNode>();
   const roots: TaskTreeNode[] = [];
 
@@ -94,6 +95,7 @@ export function buildTaskTree(tasks: any[]): TaskTreeNode[] {
       isExpanded: task.isExpanded,
       children: [],
       subTasksCount: 0,
+      orderIndex: task.orderIndex,
     });
   });
 
@@ -112,7 +114,17 @@ export function buildTaskTree(tasks: any[]): TaskTreeNode[] {
     }
   });
 
-  return roots.sort((a, b) => a.subTasksCount - b.subTasksCount);
+  const sortNodesByOrder = (nodes: TaskTreeNode[]): TaskTreeNode[] => {
+    const sorted = [...nodes].sort((a, b) => a.orderIndex - b.orderIndex);
+    sorted.forEach(node => {
+      if (node.children.length > 0) {
+        node.children = sortNodesByOrder(node.children);
+      }
+    });
+    return sorted;
+  };
+
+  return sortNodesByOrder(roots);
 }
 
 export function getRecommendedActionForNode(node: TaskTreeNode): 'contactStep' | 'tinyStep' | 'normalStep' {

@@ -1,29 +1,15 @@
 import { z } from 'zod';
-
-const TASK_STATUS_VALUES = ['INBOX', 'PLANNED', 'ACTIVE', 'BLOCKED', 'AVOIDED', 'DONE', 'ARCHIVED'] as const;
-const PRIORITY_VALUES = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'] as const;
-const TASK_PROGRESS_ACTION_VALUES = ['TOUCHED', 'STARTED_TINY_STEP', 'MADE_PROGRESS', 'COMPLETED', 'REACTIVATED'] as const;
-const RESISTANCE_REASON_VALUES = [
-  'DONT_KNOW_HOW_TO_START',
-  'TOO_BIG_OR_VAGUE',
-  'FEAR_OF_FAILURE',
-  'FEAR_OF_RESULT',
-  'TOO_ANNOYING',
-  'TOO_BORING',
-  'TOO_MENTALLY_DEMANDING',
-  'TOO_MANY_DECISIONS',
-  'FAILED_BEFORE',
-  'SHAME_FROM_DELAY',
-  'NOT_SURE_IF_WORTH_IT',
-  'SOCIAL_PRESSURE',
-  'PERFECTIONISM',
-  'FEAR_IT_WONT_END',
-  'LOW_ENERGY',
-] as const;
-const PAIN_COMPARISON_VALUES = ['LIGHTER_THAN_EXPECTED', 'ABOUT_AS_EXPECTED', 'HEAVIER_THAN_EXPECTED'] as const;
-const PROJECT_STATUS_VALUES = ['ACTIVE', 'PAUSED', 'COMPLETED', 'ARCHIVED'] as const;
-const PROGRESS_MODE_VALUES = ['AUTO', 'MANUAL'] as const;
-const TASK_TYPE_VALUES = ['PROJECT_PHASE', 'MILESTONE', 'TASK', 'SUBTASK'] as const;
+import {
+  TASK_STATUS_VALUES,
+  PRIORITY_VALUES,
+  TASK_PROGRESS_ACTION_VALUES,
+  RESISTANCE_REASON_VALUES,
+  PAIN_COMPARISON_VALUES,
+  PROJECT_STATUS_VALUES,
+  PROGRESS_MODE_VALUES,
+  TASK_TYPE_VALUES,
+  TaskType,
+} from '@/config/constants';
 
 export const TaskSchema = z.object({
   title: z.string().min(1, '标题不能为空'),
@@ -51,7 +37,7 @@ export const UpdateTaskSchema = TaskSchema.partial();
 export const CreateProjectTaskSchema = TaskSchema.extend({
   projectId: z.string().min(1),
   parentTaskId: z.string().optional(),
-  taskType: z.enum(TASK_TYPE_VALUES).optional().default('TASK'),
+  taskType: z.enum(TASK_TYPE_VALUES).optional().default(TaskType.TASK),
 });
 
 export const TaskProgressLogSchema = z.object({

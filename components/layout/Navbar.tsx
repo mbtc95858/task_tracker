@@ -7,7 +7,10 @@ export function Navbar() {
   const pathname = usePathname();
   
   const navItems = [
-    { href: '/dashboard', label: '首页' },
+    { href: '/', label: '首页' },
+    { href: '/dashboard', label: '今日面板' },
+    { href: '/timeline', label: '时间轴' },
+    { href: '/timetable', label: '甘特图' },
     { href: '/projects', label: '项目' },
     { href: '/tasks', label: '任务' },
     { href: '/daily-review', label: '每日复盘' },
@@ -15,8 +18,8 @@ export function Navbar() {
   ];
 
   const isActive = (href: string) => {
-    if (href === '/dashboard') {
-      return pathname === '/' || pathname === '/dashboard';
+    if (href === '/') {
+      return pathname === '/';
     }
     return pathname.startsWith(href);
   };

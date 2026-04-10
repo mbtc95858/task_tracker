@@ -164,3 +164,42 @@ export const PROGRESS_MODE_LABELS: Record<ProgressMode, string> = {
   [ProgressMode.AUTO]: '自动计算',
   [ProgressMode.MANUAL]: '手动填写',
 };
+
+// ------------------------------
+// 任务分类
+// ------------------------------
+
+export enum TaskCategory {
+  WORK = 'WORK',
+  PERSONAL = 'PERSONAL',
+  STUDY = 'STUDY',
+  HEALTH = 'HEALTH',
+  FINANCE = 'FINANCE',
+  CREATIVE = 'CREATIVE',
+  SOCIAL = 'SOCIAL',
+  ADMIN = 'ADMIN',
+}
+
+export const TASK_CATEGORY_VALUES = Object.values(TaskCategory) as [TaskCategory, ...TaskCategory[]];
+
+export const TASK_CATEGORY_LABELS: Record<TaskCategory, string> = {
+  [TaskCategory.WORK]: '工作',
+  [TaskCategory.PERSONAL]: '个人',
+  [TaskCategory.STUDY]: '学习',
+  [TaskCategory.HEALTH]: '健康',
+  [TaskCategory.FINANCE]: '财务',
+  [TaskCategory.CREATIVE]: '创意',
+  [TaskCategory.SOCIAL]: '社交',
+  [TaskCategory.ADMIN]: '行政',
+};
+
+export const TASK_CATEGORY_COLORS: Record<TaskCategory, string> = {
+  [TaskCategory.WORK]: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+  [TaskCategory.PERSONAL]: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
+  [TaskCategory.STUDY]: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+  [TaskCategory.HEALTH]: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+  [TaskCategory.FINANCE]: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
+  [TaskCategory.CREATIVE]: 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300',
+  [TaskCategory.SOCIAL]: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
+  [TaskCategory.ADMIN]: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
+};

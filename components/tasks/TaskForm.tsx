@@ -4,7 +4,7 @@ import { useFormState } from 'react-dom';
 import { Button } from '@/components/ui/Button';
 import { Input, Textarea } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
-import { TASK_STATUS_LABELS, PRIORITY_LABELS, RESISTANCE_REASON_LABELS } from '@/config/constants';
+import { TASK_STATUS_LABELS, PRIORITY_LABELS, RESISTANCE_REASON_LABELS, TASK_CATEGORY_LABELS, TASK_CATEGORY_VALUES } from '@/config/constants';
 import { parseResistanceReasons } from '@/config/businessRules';
 
 const TASK_STATUS_VALUES = ['INBOX', 'PLANNED', 'ACTIVE', 'BLOCKED', 'AVOIDED', 'DONE', 'ARCHIVED'] as const;
@@ -55,7 +55,14 @@ export function TaskForm({ action, initialData }: TaskFormProps) {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">分类</label>
-            <Input name="category" defaultValue={initialData?.category || ''} />
+            <Select name="category" defaultValue={initialData?.category || ''}>
+              <option value="">无分类</option>
+              {TASK_CATEGORY_VALUES.map((value) => (
+                <option key={value} value={value}>
+                  {TASK_CATEGORY_LABELS[value as keyof typeof TASK_CATEGORY_LABELS]}
+                </option>
+              ))}
+            </Select>
           </div>
 
           <div className="grid grid-cols-2 gap-4">

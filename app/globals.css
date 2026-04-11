@@ -16,20 +16,18 @@
   --indigo-900: #312e81;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --indigo-50: rgba(99, 102, 241, 0.1);
-    --indigo-100: rgba(99, 102, 241, 0.2);
-    --indigo-200: rgba(99, 102, 241, 0.3);
-    --indigo-400: #818cf8;
-    --indigo-500: #6366f1;
-    --indigo-600: #a5b4fc;
-    --indigo-700: #c7d2fe;
-    --indigo-800: #e0e7ff;
-    --indigo-900: #eef2ff;
-  }
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --indigo-50: rgba(99, 102, 241, 0.1);
+  --indigo-100: rgba(99, 102, 241, 0.2);
+  --indigo-200: rgba(99, 102, 241, 0.3);
+  --indigo-400: #818cf8;
+  --indigo-500: #6366f1;
+  --indigo-600: #a5b4fc;
+  --indigo-700: #c7d2fe;
+  --indigo-800: #e0e7ff;
+  --indigo-900: #eef2ff;
 }
 
 body {
@@ -44,77 +42,110 @@ body {
   }
 }
 
-/* 高阻力任务的深色模式样式 */
+/* 高阻力任务的样式 */
+.high-resistance-card {
+  background-color: rgba(99, 102, 241, 0.05);
+  border-left-color: #6366f1;
+}
+
 .dark .high-resistance-card {
   background-color: rgba(99, 102, 241, 0.1);
   border-left-color: #6366f1;
+}
+
+.high-resistance-text {
+  color: #4338ca;
 }
 
 .dark .high-resistance-text {
   color: #c7d2fe;
 }
 
+.high-resistance-bg {
+  background-color: rgba(99, 102, 241, 0.08);
+}
+
 .dark .high-resistance-bg {
   background-color: rgba(99, 102, 241, 0.15);
+}
+
+.high-resistance-border {
+  border-left-color: #6366f1;
 }
 
 .dark .high-resistance-border {
   border-left-color: #818cf8;
 }
 
-/* 导航栏深色模式优化 */
-@media (prefers-color-scheme: dark) {
-  nav {
-    background-color: #1f2937;
-    border-bottom-color: #374151;
-  }
+/* 统计卡片的样式 */
+.stats-card {
+  background-color: #ffffff;
+  border-color: #e5e7eb;
 }
 
-/* 统计卡片的深色模式样式 */
-@media (prefers-color-scheme: dark) {
-  .stats-card {
-    background-color: #1f2937;
-    border-color: #374151;
-  }
+.dark .stats-card {
+  background-color: #1f2937;
+  border-color: #374151;
 }
 
-/* 按钮和交互元素的深色模式优化 */
-@media (prefers-color-scheme: dark) {
-  button:hover {
-    background-color: #374151;
-  }
-  
-  input, textarea, select {
-    background-color: #1f2937;
-    border-color: #4b5563;
-    color: #f3f4f6;
-  }
-  
-  input:focus, textarea:focus, select:focus {
-    border-color: #6366f1;
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
-  }
+/* 按钮和交互元素的样式 */
+button:hover {
+  background-color: #f3f4f6;
 }
 
-/* 进度条和图表的深色模式优化 */
-@media (prefers-color-scheme: dark) {
-  .progress-bar {
-    background-color: #374151;
-  }
+.dark button:hover {
+  background-color: #374151;
 }
 
-/* 空状态的深色模式优化 */
-@media (prefers-color-scheme: dark) {
-  .empty-state {
-    background-color: rgba(55, 65, 81, 0.5);
-    border-color: #4b5563;
-  }
+input, textarea, select {
+  background-color: #ffffff;
+  border-color: #d1d5db;
+  color: #1f2937;
 }
 
-/* 渐变卡片的深色模式支持 */
-@media (prefers-color-scheme: dark) {
-  .gradient-card {
-    background: linear-gradient(to right, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
-  }
+.dark input, .dark textarea, .dark select {
+  background-color: #1f2937;
+  border-color: #4b5563;
+  color: #f3f4f6;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: #6366f1;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.dark input:focus, .dark textarea:focus, .dark select:focus {
+  border-color: #6366f1;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+/* 进度条和图表的样式 */
+.progress-bar {
+  background-color: #e5e7eb;
+}
+
+.dark .progress-bar {
+  background-color: #374151;
+}
+
+/* 空状态的样式 */
+.empty-state {
+  background-color: rgba(243, 244, 246, 0.5);
+  border-color: #e5e7eb;
+}
+
+.dark .empty-state {
+  background-color: rgba(55, 65, 81, 0.5);
+  border-color: #4b5563;
+}
+
+/* 渐变卡片的支持 */
+.gradient-card {
+  background: linear-gradient(to right, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+}
+
+.dark .gradient-card {
+  background: linear-gradient(to right, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
 }

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 export function Navbar() {
   const pathname = usePathname();
@@ -33,7 +34,7 @@ export function Navbar() {
               Task Tracker
             </Link>
           </div>
-          <div className="flex space-x-4">
+          <div className="flex items-center space-x-4">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -47,6 +48,7 @@ export function Navbar() {
                 {item.label}
               </Link>
             ))}
+            <ThemeToggle />
           </div>
         </div>
       </div>

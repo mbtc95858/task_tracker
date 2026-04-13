@@ -1,180 +1,217 @@
+'use client';
+
 import Link from 'next/link';
-import { Suspense } from 'react';
-import { Button } from '@/components/ui/Button';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { ProjectCard } from '@/components/projects/ProjectCard';
-import { getProjects } from '@/features/project/services';
-import { getTasks } from '@/features/task/services';
-import { TaskListWithFilters } from '@/components/tasks/TaskListWithFilters';
-import { TASK_STATUS_LABELS } from '@/config/constants';
+import { Calendar } from '@/components/ui/Calendar';
 
-export default async function HomePage() {
-  const [projects, tasks] = await Promise.all([
-    getProjects(),
-    getTasks(),
-  ]);
+export default function HomePage() {
+  const router = useRouter();
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [activeDays, setActiveDays] = useState<Set<string>>(new Set());
+  const [loading, setLoading] = useState(true);
 
-  const recentProjects = projects.slice(0, 3);
-  const recentTasks = tasks.slice(0, 5);
+  useEffect(() => {
+    async function fetchActiveDays() {
+      try {
+        const response = await fetch('/api/active-days');
+        if (response.ok) {
+          const data = await response.json();
+          setActiveDays(new Set(data.days));
+        }
+      } catch (error) {
+        console.error('Failed to fetch active days:', error);
+        setActiveDays(new Set());
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchActiveDays();
+  }, []);
+
+  const handleDateSelect = (date: Date) => {
+    setSelectedDate(date);
+    const dateStr = date.toISOString().split('T')[0];
+    router.push(`/calendar/${dateStr}`);
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">加载中...</h1>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">任务追踪</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
-            今天不要求完成，只要求接触
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">你好，开始吧！</h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">
+            Ready for today's challenges?
           </p>
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Link href="/tasks/new">
-          <Button className="w-full h-16 text-lg bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700">
-            + 快速创建任务
-          </Button>
-        </Link>
-        <Link href="/projects/new">
-          <Button className="w-full h-16 text-lg bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700">
-            + 快速创建项目
-          </Button>
-        </Link>
-      </div>
-
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>最近项目</CardTitle>
-              <Link href="/projects">
-                <Button variant="ghost" size="sm">
-                  查看全部 →
-                </Button>
-              </Link>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {recentProjects.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-gray-500 dark:text-gray-400">还没有项目</p>
-                <Link href="/projects/new" className="mt-3 inline-block">
-                  <Button variant="ghost">创建第一个项目</Button>
-                </Link>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {recentProjects.map((project) => (
-                  <div key={project.id}>
-                    <Link href={`/projects/${project.id}`}>
-                      <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <h4 className="font-semibold text-gray-900 dark:text-white">{project.title}</h4>
-                            <div className="mt-2 flex items-center justify-between text-sm">
-                              <span className="text-gray-500 dark:text-gray-400">进度</span>
-                              <span className="font-medium">{project.progress}%</span>
-                            </div>
-                            <div className="mt-1 w-full bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
-                              <div
-                                className="bg-blue-600 h-1.5 rounded-full transition-all"
-                                style={{ width: `${project.progress}%` }}
-                              />
-                            </div>
-                            <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                              挑战性节点: {project.highResistanceCount}
-                            </div>
-                          </div>
-                        </div>
+        <div className="space-y-6">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg">快速开始</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Link href="/tasks/new?from=home" className="block">
+                <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-lime-400 to-lime-500 p-4 transition-all duration-300 hover:shadow-xl hover:scale-101">
+                  <div className="absolute right-0 top-0 -mr-4 -mt-4 w-16 h-16 rounded-full bg-white/20 blur-2xl group-hover:bg-white/30 transition-all" />
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        </svg>
                       </div>
-                    </Link>
+                      <svg className="w-4 h-4 text-white/80 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-bold text-white mb-1">创建新任务</h3>
+                    <p className="text-white/80 text-xs">记录你想要完成的任务</p>
                   </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>最近任务</CardTitle>
-              <Link href="/tasks">
-                <Button variant="ghost" size="sm">
-                  查看全部 →
-                </Button>
+                </div>
               </Link>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {recentTasks.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-gray-500 dark:text-gray-400">还没有任务</p>
-                <Link href="/tasks/new" className="mt-3 inline-block">
-                  <Button variant="ghost">创建第一个任务</Button>
-                </Link>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {recentTasks.map((task) => (
-                  <Link key={task.id} href={`/tasks/${task.id}`}>
-                    <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-gray-900 dark:text-white">{task.title}</h4>
-                          <div className="mt-2 flex items-center gap-3">
-                            <span className="text-xs px-2 py-1 rounded bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-300">
-                              {TASK_STATUS_LABELS[task.status as keyof typeof TASK_STATUS_LABELS]}
-                            </span>
-                            {task.priority && (
-                              <span className="text-xs text-gray-500 dark:text-gray-400">
-                                优先级: {task.priority}
-                              </span>
-                            )}
-                          </div>
-                        </div>
+
+              <Link href="/projects/new?from=home" className="block">
+                <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-600 p-4 transition-all duration-300 hover:shadow-xl hover:scale-101">
+                  <div className="absolute right-0 top-0 -mr-4 -mt-4 w-16 h-16 rounded-full bg-white/20 blur-2xl group-hover:bg-white/30 transition-all" />
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                      </div>
+                      <svg className="w-4 h-4 text-white/80 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-bold text-white mb-1">创建新项目</h3>
+                    <p className="text-white/80 text-xs">管理更大的目标和任务</p>
+                  </div>
+                </div>
+              </Link>
+            </CardContent>
+          </Card>
+
+          <div className="grid gap-6 sm:grid-cols-2">
+            <Card>
+              <CardContent className="p-5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-base font-semibold text-gray-800 dark:text-gray-100">今日进度</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">你快完成了！</p>
+                  </div>
+                  <div className="relative">
+                    <svg className="w-24 h-24" viewBox="0 0 100 100">
+                      <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(163,230,53,0.2)" strokeWidth="8" />
+                      <circle cx="50" cy="50" r="40" fill="none" stroke="#a3e635" strokeWidth="8" strokeLinecap="round" strokeDasharray="251.2" strokeDashoffset="150.72" transform="rotate(-90 50 50)" className="transition-all duration-500" />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-xl font-bold text-lime-400">40%</span>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">目标: 至少5个推进</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-base font-semibold text-gray-800 dark:text-gray-100">积分计划</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">25% 完成</p>
+                  </div>
+                </div>
+                <div className="mt-5">
+                  <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
+                    <span>250 积分</span>
+                    <span>目标: 1000</span>
+                  </div>
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+                    <div className="bg-gradient-to-r from-lime-400 to-lime-500 h-3 rounded-full transition-all" style={{ width: '25%' }} />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg">今日概览</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4">
+                <Link href="/tasks" className="block">
+                  <div className="group cursor-pointer">
+                    <div className="flex items-center justify-between p-5 rounded-2xl bg-gray-50 dark:bg-gray-700/30 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-gray-700/50">
+                      <div>
+                        <p className="text-4xl font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">12</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">总任务</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs text-gray-600 dark:text-gray-400">进行中: 5</p>
                       </div>
                     </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+                  </div>
+                </Link>
 
-      <div className="grid gap-4 sm:grid-cols-4">
-        <Link href="/dashboard">
-          <Card className="cursor-pointer hover:shadow-md transition-shadow">
-            <CardContent className="p-4 text-center">
-              <p className="text-sm font-medium text-gray-900 dark:text-white">今日面板</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">查看今日重点</p>
+                <Link href="/tasks" className="block">
+                  <div className="group cursor-pointer">
+                    <div className="flex items-center justify-between p-5 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 transition-all duration-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/30">
+                      <div>
+                        <p className="text-4xl font-bold text-indigo-600 dark:text-indigo-400 group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors">3</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">挑战性</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs text-gray-600 dark:text-gray-400">别害怕，慢慢来</p>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+
+                <Link href="/dashboard" className="block">
+                  <div className="group cursor-pointer">
+                    <div className="flex items-center justify-between p-5 rounded-2xl bg-lime-50 dark:bg-lime-900/20 transition-all duration-300 hover:bg-lime-100 dark:hover:bg-lime-900/30">
+                      <div>
+                        <p className="text-4xl font-bold text-lime-500 group-hover:text-lime-600 transition-colors">2</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">今日推进</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs text-gray-600 dark:text-gray-400">继续加油</p>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </div>
             </CardContent>
           </Card>
-        </Link>
-        <Link href="/tasks">
-          <Card className="cursor-pointer hover:shadow-md transition-shadow">
-            <CardContent className="p-4 text-center">
-              <p className="text-sm font-medium text-gray-900 dark:text-white">全部任务</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">管理任务列表</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href="/projects">
-          <Card className="cursor-pointer hover:shadow-md transition-shadow">
-            <CardContent className="p-4 text-center">
-              <p className="text-sm font-medium text-gray-900 dark:text-white">全部项目</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">管理项目列表</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href="/daily-review">
-          <Card className="cursor-pointer hover:shadow-md transition-shadow">
-            <CardContent className="p-4 text-center">
-              <p className="text-sm font-medium text-gray-900 dark:text-white">每日复盘</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">总结今日进展</p>
-            </CardContent>
-          </Card>
-        </Link>
+
+          <div className="relative z-10">
+            <Calendar 
+              activeDays={activeDays} 
+              selectedDate={selectedDate}
+              onDateSelect={handleDateSelect}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

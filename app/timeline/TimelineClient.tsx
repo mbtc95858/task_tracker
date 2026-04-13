@@ -1,8 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { TaskTimeline } from '@/components/tasks/TaskTimeline';
 import { TaskFilterButtons } from '@/components/tasks/TaskFilterButtons';
@@ -41,9 +39,6 @@ export function TimelineClient({ tasks }: TimelineClientProps) {
             按时间查看你的任务
           </p>
         </div>
-        <Link href="/tasks/new">
-          <Button>+ 新建任务</Button>
-        </Link>
       </div>
 
       <Card>

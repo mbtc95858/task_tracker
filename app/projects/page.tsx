@@ -1,5 +1,3 @@
-import Link from 'next/link';
-import { Button } from '@/components/ui/Button';
 import { ProjectCard } from '@/components/projects/ProjectCard';
 import { getProjects } from '@/features/project/services';
 
@@ -15,20 +13,14 @@ export default async function ProjectsPage() {
             把长任务拆解成可开始的路径
           </p>
         </div>
-        <Link href="/projects/new">
-          <Button>新建项目</Button>
-        </Link>
       </div>
 
       {projects.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-500 dark:text-gray-400">还没有项目</p>
           <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
-            先创建一个项目，把大任务拆成小步骤
+            请到首页创建第一个项目
           </p>
-          <Link href="/projects/new" className="mt-4 inline-block">
-            <Button>创建第一个项目</Button>
-          </Link>
         </div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

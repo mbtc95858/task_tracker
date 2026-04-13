@@ -127,3 +127,80 @@ export async function updateTask(id: string, data: UpdateTaskInput) {
 export async function deleteTask(id: string) {
   return prisma.task.delete({ where: { id } });
 }
+
+export async function getTasksByDate(date: Date) {
+  const startOfDay = new Date(date);
+  startOfDay.setHours(0, 0, 0, 0);
+  
+  const endOfDay = new Date(date);
+  endOfDay.setHours(23, 59, 59, 999);
+
+  return prisma.task.findMany({
+    where: {
+      dueDate: {
+        gte: startOfDay,
+        lte: endOfDay,
+      },
+    },
+    orderBy: [
+      { priority: 'desc' },
+      { createdAt: 'desc' },
+    ],
+  });
+}
+
+export async function getProjectsByDate(date: Date) {
+  const startOfDay = new Date(date);
+  startOfDay.setHours(0, 0, 0, 0);
+  
+  const endOfDay = new Date(date);
+  endOfDay.setHours(23, 59, 59, 999);
+
+  return prisma.project.findMany({
+    where: {
+      dueDate: {
+        gte: startOfDay,
+        lte: endOfDay,
+      },
+    },
+    orderBy: [
+      { priority: 'desc' },
+      { createdAt: 'desc' },
+    ],
+  });
+}
+
+export async function getAllActiveDays() {
+  const tasks = await prisma.task.findMany({
+    where: {
+      dueDate: {
+        not: null,
+      },
+    },
+    select: {
+      dueDate: true,
+    },
+  });
+
+  const projects = await prisma.project.findMany({
+    where: {
+      dueDate: {
+        not: null,
+      },
+    },
+    select: {
+      dueDate: true,
+    },
+  });
+
+  const activeDays = new Set<string>();
+  
+  [...tasks, ...projects].forEach((item) => {
+    if (item.dueDate) {
+      const dateStr = item.dueDate.toISOString().split('T')[0];
+      activeDays.add(dateStr);
+    }
+  });
+
+  return activeDays;
+}

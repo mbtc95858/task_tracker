@@ -13,7 +13,8 @@ export default async function CalendarDatePage({ params }: CalendarDatePageProps
   const { date } = params;
   
   try {
-    const targetDate = new Date(date);
+    const [year, month, day] = date.split('-').map(Number);
+    const targetDate = new Date(year, month - 1, day);
     if (isNaN(targetDate.getTime())) {
       notFound();
     }
@@ -22,7 +23,8 @@ export default async function CalendarDatePage({ params }: CalendarDatePageProps
     const projects = await getProjectsByDate(targetDate);
 
     const formatDate = (dateStr: string) => {
-      const date = new Date(dateStr);
+      const [year, month, day] = dateStr.split('-').map(Number);
+      const date = new Date(year, month - 1, day);
       return date.toLocaleDateString('zh-CN', {
         year: 'numeric',
         month: 'long',

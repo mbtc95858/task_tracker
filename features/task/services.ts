@@ -197,7 +197,8 @@ export async function getAllActiveDays() {
   
   [...tasks, ...projects].forEach((item) => {
     if (item.dueDate) {
-      const dateStr = item.dueDate.toISOString().split('T')[0];
+      const date = new Date(item.dueDate);
+      const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
       activeDays.add(dateStr);
     }
   });

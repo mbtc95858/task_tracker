@@ -59,7 +59,8 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-3">
+        {/* 左侧栏 - 快速开始 */}
         <div className="space-y-6">
           <Card>
             <CardHeader className="pb-3">
@@ -108,51 +109,7 @@ export default function HomePage() {
             </CardContent>
           </Card>
 
-          <div className="grid gap-6 sm:grid-cols-2">
-            <Card>
-              <CardContent className="p-5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-base font-semibold text-gray-800 dark:text-gray-100">今日进度</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">你快完成了！</p>
-                  </div>
-                  <div className="relative">
-                    <svg className="w-24 h-24" viewBox="0 0 100 100">
-                      <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(163,230,53,0.2)" strokeWidth="8" />
-                      <circle cx="50" cy="50" r="40" fill="none" stroke="#a3e635" strokeWidth="8" strokeLinecap="round" strokeDasharray="251.2" strokeDashoffset="150.72" transform="rotate(-90 50 50)" className="transition-all duration-500" />
-                    </svg>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-xl font-bold text-lime-400">40%</span>
-                    </div>
-                  </div>
-                </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">目标: 至少5个推进</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="p-5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-base font-semibold text-gray-800 dark:text-gray-100">积分计划</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">25% 完成</p>
-                  </div>
-                </div>
-                <div className="mt-5">
-                  <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
-                    <span>250 积分</span>
-                    <span>目标: 1000</span>
-                  </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-                    <div className="bg-gradient-to-r from-lime-400 to-lime-500 h-3 rounded-full transition-all" style={{ width: '25%' }} />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
-        <div className="space-y-6">
+          {/* 左下角 - 今日概览 */}
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-lg">今日概览</CardTitle>
@@ -203,13 +160,62 @@ export default function HomePage() {
               </div>
             </CardContent>
           </Card>
+        </div>
 
+        {/* 中间栏 - 日历 */}
+        <div className="space-y-6">
           <div className="relative z-10">
             <Calendar 
               activeDays={activeDays} 
               selectedDate={selectedDate}
               onDateSelect={handleDateSelect}
             />
+          </div>
+        </div>
+
+        {/* 右上角 - 今日进度和积分计划 */}
+        <div className="space-y-6">
+          <div className="grid gap-6">
+            <Card>
+              <CardContent className="p-5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-base font-semibold text-gray-800 dark:text-gray-100">今日进度</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">你快完成了！</p>
+                  </div>
+                  <div className="relative">
+                    <svg className="w-24 h-24" viewBox="0 0 100 100">
+                      <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(163,230,53,0.2)" strokeWidth="8" />
+                      <circle cx="50" cy="50" r="40" fill="none" stroke="#a3e635" strokeWidth="8" strokeLinecap="round" strokeDasharray="251.2" strokeDashoffset="150.72" transform="rotate(-90 50 50)" className="transition-all duration-500" />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-xl font-bold text-lime-400">40%</span>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">目标: 至少5个推进</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-base font-semibold text-gray-800 dark:text-gray-100">积分计划</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">25% 完成</p>
+                  </div>
+                </div>
+                <div className="mt-5">
+                  <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
+                    <span>250 积分</span>
+                    <span>目标: 1000</span>
+                  </div>
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+                    <div className="bg-gradient-to-r from-lime-400 to-lime-500 h-3 rounded-full transition-all" style={{ width: '25%' }} />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>

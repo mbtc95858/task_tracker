@@ -3,6 +3,7 @@ import React from 'react';
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'accent';
   size?: 'sm' | 'md' | 'lg';
+  asChild?: boolean;
 }
 
 export function Button({
@@ -10,6 +11,7 @@ export function Button({
   variant = 'primary',
   size = 'md',
   className = '',
+  asChild = false,
   ...props
 }: ButtonProps) {
   const baseStyles = 'inline-flex items-center justify-center rounded-2xl font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
@@ -28,9 +30,19 @@ export function Button({
     lg: 'px-7 py-3.5 text-lg',
   };
 
+  const combinedClassName = `${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`;
+
+  if (asChild) {
+    const child = React.Children.only(children) as React.ReactElement;
+    return React.cloneElement(child, {
+      className: `${combinedClassName} ${child.props.className || ''}`,
+      ...props,
+    });
+  }
+
   return (
     <button
-      className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
+      className={combinedClassName}
       {...props}
     >
       {children}

@@ -1,12 +1,14 @@
 'use client';
 
 import { useFormState } from 'react-dom';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input, Textarea } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
+import { ProjectSelect } from '@/components/ui/ProjectSelect';
 import { TASK_STATUS_LABELS, PRIORITY_LABELS, RESISTANCE_REASON_LABELS, TASK_CATEGORY_LABELS, TASK_CATEGORY_VALUES } from '@/config/constants';
 import { parseResistanceReasons } from '@/config/businessRules';
+import { ProjectWithStats } from '@/types';
 
 const TASK_STATUS_VALUES = ['INBOX', 'PLANNED', 'ACTIVE', 'BLOCKED', 'AVOIDED', 'DONE', 'ARCHIVED'] as const;
 const PRIORITY_VALUES = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'] as const;
@@ -37,12 +39,15 @@ const STEPS = [
 interface TaskFormProps {
   action: (prevState: any, formData: FormData) => Promise<any>;
   initialData?: any;
+  projects: ProjectWithStats[];
 }
 
-export function TaskForm({ action, initialData }: TaskFormProps) {
+export function TaskForm({ action, initialData, projects }: TaskFormProps) {
   const [state, formAction] = useFormState(action, { error: null });
   const [currentStep, setCurrentStep] = useState(1);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | undefined>(initialData?.projectId);
   const initialResistanceReasons = initialData ? parseResistanceReasons(initialData.resistanceReasons) : [];
+  const formRef = useRef<HTMLFormElement>(null);
 
   const totalSteps = STEPS.length;
   const progress = (currentStep / totalSteps) * 100;
@@ -127,6 +132,17 @@ export function TaskForm({ action, initialData }: TaskFormProps) {
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">描述</label>
         <Textarea name="description" defaultValue={initialData?.description || ''} rows={4} />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">所属项目</label>
+        <ProjectSelect
+          projects={projects}
+          value={selectedProjectId}
+          onChange={setSelectedProjectId}
+          placeholder="选择项目（可选）"
+        />
+        <input type="hidden" name="projectId" value={selectedProjectId || ''} />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
@@ -313,15 +329,16 @@ export function TaskForm({ action, initialData }: TaskFormProps) {
           上一步
         </Button>
         
-        {currentStep < totalSteps ? (
-          <Button type="button" onClick={handleNext}>
-            下一步
-          </Button>
-        ) : (
+        <div className="flex gap-2">
+          {currentStep < totalSteps && (
+            <Button type="button" onClick={handleNext} variant="secondary">
+              下一步
+            </Button>
+          )}
           <Button type="submit">
-            保存任务
+            {currentStep < totalSteps ? '保存（可继续完善）' : '保存任务'}
           </Button>
-        )}
+        </div>
       </div>
     </form>
   );

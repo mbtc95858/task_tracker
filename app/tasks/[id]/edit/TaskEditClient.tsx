@@ -6,12 +6,14 @@ import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { TaskForm } from '@/components/tasks/TaskForm';
 import { updateTaskAction, deleteTaskAction } from '@/features/task/actions';
+import { ProjectWithStats } from '@/types';
 
 interface TaskEditClientProps {
   task: any;
+  projects: ProjectWithStats[];
 }
 
-export function TaskEditClient({ task }: TaskEditClientProps) {
+export function TaskEditClient({ task, projects }: TaskEditClientProps) {
   const params = useParams();
 
   const handleDelete = async () => {
@@ -36,7 +38,11 @@ export function TaskEditClient({ task }: TaskEditClientProps) {
 
       <Card>
         <CardContent className="pt-6">
-          <TaskForm action={updateTaskAction} initialData={{ ...task, id: params.id }} />
+          <TaskForm 
+            action={updateTaskAction} 
+            initialData={{ ...task, id: params.id }} 
+            projects={projects} 
+          />
         </CardContent>
       </Card>
     </div>
